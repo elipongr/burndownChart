@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {NzCalendarMode} from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +7,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  date = new Date();
+  days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  selectedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+  selectedColumns = ['Done'];
   dates = [
     new Date(2021, 3, 8),
     new Date(2021, 3, 9),
@@ -24,6 +29,7 @@ export class AppComponent {
   ];
 
   options = {
+    color: ['red', 'blue'],
     legend: {
       left: 'center',
       data: ['PLAN', 'REAL']
@@ -57,7 +63,7 @@ export class AppComponent {
       {
         name: 'REAL',
         type: 'line',
-        data: [1 / 2, 1 / 4, 1 /8, 1/16, 1/32, 1/64, 1/128, 1/256, 1/512, 1/1024, 1/2048, 1 /4096,1 /8192, 1 /16384]
+        data: [1 / 2, 1 / 4, 1 / 8, 1 / 16, 1 / 32, 1 / 64, 1 / 128, 1 / 256, 1 / 512, 1 / 1024, 1 / 2048, 1 / 4096, 1 / 8192, 1 / 16384]
       }
     ]
   };
