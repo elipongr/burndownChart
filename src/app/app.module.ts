@@ -10,7 +10,14 @@ import { de_DE } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import de from '@angular/common/locales/de';
 import {NgxEchartsModule} from 'ngx-echarts';
-import {NgZorroAntdModule, NzCardModule} from 'ng-zorro-antd';
+import {
+  NzCardModule,
+  NzDatePickerModule,
+  NzFormModule,
+  NzInputModule,
+  NzLayoutModule,
+  NzSelectModule
+} from 'ng-zorro-antd';
 
 registerLocaleData(de);
 
@@ -26,7 +33,12 @@ registerLocaleData(de);
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts'),
     }),
-    NgZorroAntdModule
+    NzFormModule,
+    NzSelectModule,
+    NzDatePickerModule,
+    NzLayoutModule,
+    NzCardModule,
+    NzInputModule
   ],
   providers: [{ provide: NZ_I18N, useValue: de_DE }],
   bootstrap: [AppComponent]
