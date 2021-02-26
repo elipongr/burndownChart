@@ -1,14 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {FaunaService} from './fauna.service';
-import {TrelloService} from './trello.service';
-import {EChartsOption} from 'echarts';
+import {formatDate} from '@angular/common';
 
 interface Sprint {
-  board: string;
   values: number[];
   startDate: string;
   endDate: string;
-  days: boolean[];
 }
 
 @Component({
@@ -19,12 +16,10 @@ interface Sprint {
 export class AppComponent implements OnInit {
   echartsInstance;
   date = new Date();
-  days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  selectedDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-  selectedColumns = ['Done'];
-  dates = [1,2,2,3,4,5];
+  days = [1, 2, 4, 5];
+  dates: string[] = [];
   sprint: Sprint;
-  options: EChartsOption = {
+  options = {
     color: ['red', 'blue'],
     legend: {
       left: 'center',
@@ -36,6 +31,9 @@ export class AppComponent implements OnInit {
     xAxis: {
       type: 'category',
       boundaryGap: false,
+      axisLabel: {
+        rotate: 15
+      },
       data: this.dates
     },
     grid: {
@@ -55,7 +53,37 @@ export class AppComponent implements OnInit {
       {
         name: 'PLAN',
         type: 'line',
-        data: [20,20,20,20,20]
+        data: [],
+        markArea: {
+          itemStyle: {
+            color: '#E8E8E8'
+          },
+          data: [[{
+            xAxis: 'Tag 2: Di. 09.03'
+          }, {
+            xAxis: 'Mi. 10.03'
+          }], [{
+            xAxis: 'Tag 4: Fr. 12.03'
+          }, {
+            xAxis: 'So. 14.03'
+          }], [{
+            xAxis: 'Tag 6: Di. 16.03'
+          }, {
+            xAxis: 'Mi. 17.03'
+          }], [{
+            xAxis: 'Tag 8: Fr. 19.03'
+          }, {
+            xAxis: 'So. 21.03'
+          }], [{
+            xAxis: 'Tag 10: Di. 23.03'
+          }, {
+            xAxis: 'Mi. 24.03'
+          }], [{
+            xAxis: 'Tag 12: Fr. 26.03'
+          }, {
+            xAxis: 'So. 28.03'
+          }]]
+        }
       },
       {
         name: 'REAL',
@@ -65,22 +93,59 @@ export class AppComponent implements OnInit {
     ]
   };
 
-
-  constructor(private faunaService: FaunaService, private trelloService: TrelloService) {
+  constructor(private faunaService: FaunaService) {
 
   }
 
   ngOnInit() {
-    this.faunaService.getBurndownValues().subscribe((res) =>  {
-      // @ts-ignore
-      this.sprint = res.data;
-    });
   }
 
   onChartInit(ec) {
     this.echartsInstance = ec;
-    this.options.series[1].data = this.sprint.values;
-    console.log(this.options);
-    this.echartsInstance.setOption(this.options);
+    this.faunaService.getBurndownValues().subscribe((res) => {
+      // @ts-ignore
+      this.sprint = res.data;
+      this.options.series[1].data = this.sprint.values;
+      this.options.xAxis.data = this.getDates(new Date(this.sprint.startDate), new Date(this.sprint.endDate));
+      this.options.series[0].data = this.generatePlanLine(this.sprint.values[0]);
+      this.echartsInstance.setOption(this.options);
+    });
+  }
+
+  getDates(startDate, stopDate) {
+    const dateArray: string[] = new Array();
+    dateArray.push('Tag 0');
+    const currentDate: Date = startDate;
+    let i = 0;
+    while (currentDate <= stopDate) {
+      if (this.days.includes(currentDate.getDay())) {
+        i++;
+        dateArray.push('Tag ' + (i) + ': ' + formatDate(currentDate, 'EE dd.MM', 'de-DE'));
+      } else {
+        dateArray.push(formatDate(currentDate, 'EE dd.MM', 'de-DE'));
+      }
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dateArray;
+  }
+
+  generatePlanLine(value) {
+    const values: number[] = [value];
+    let day = 1;
+    let days = 13;
+    let plannedValue;
+    for (let i = 8; i <= 30; i++) {
+      if (this.days.includes(day)) {
+        plannedValue = value / 14 * days;
+        days--;
+      }
+      day++;
+      if (day > 7) {
+        day = 1;
+      }
+      plannedValue = Math.round(plannedValue * 100) / 100;
+      values.push(plannedValue);
+    }
+    return values;
   }
 }

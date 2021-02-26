@@ -3,50 +3,6 @@
   <nz-content>
     <div class="inner-content">
       <nz-card class="inner-content">
-        <form nz-form>
-          <nz-form-item>
-            <nz-form-label>Range</nz-form-label>
-            <nz-form-control>
-              <nz-range-picker></nz-range-picker>
-            </nz-form-control>
-          </nz-form-item>
-          <nz-form-item>
-            <nz-form-label>Days</nz-form-label>
-            <nz-form-control>
-              <nz-select
-                nzMode="multiple"
-                nzPlaceHolder="Please select"
-                [(ngModel)]="selectedDays"
-                name="selectDays"
-              >
-                <nz-option *ngFor="let item of days" [nzLabel]="item" [nzValue]="item"></nz-option>
-              </nz-select>
-            </nz-form-control>
-          </nz-form-item>
-          <nz-form-item>
-            <nz-form-label>Done Columns</nz-form-label>
-            <nz-form-control>
-              <nz-select
-                nzMode="tags"
-                nzPlaceHolder="Please select"
-                [(ngModel)]="selectedColumns"
-                name="selectColumns">
-              </nz-select>
-            </nz-form-control>
-          </nz-form-item>
-          <nz-form-item>
-            <nz-form-label>Trello Board</nz-form-label>
-            <nz-form-control>
-              <nz-input-group nzAddOnBefore="Https://trello.com/b/" nzAddOnAfter="/{name}">
-                <input type="text" nz-input/>
-              </nz-input-group>
-            </nz-form-control>
-          </nz-form-item>
-        </form>
-      </nz-card>
-    </div>
-    <div class="inner-content">
-      <nz-card class="inner-content">
         <div echarts [options]="options" (chartInit)="onChartInit($event)"></div>
       </nz-card>
     </div>
